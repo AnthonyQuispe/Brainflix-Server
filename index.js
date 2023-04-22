@@ -1,16 +1,21 @@
 const express = require("express");
 const app = express();
 const PORT = 8080;
-const { v4: uuidv4 } = require("uuid");
+const videoRoute = require("./routes/videos");
 const cors = require("cors");
 
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
 
 app.use((req, res, next) => {
   next();
 });
 
-app.use("/", videoRoutes);
+// This middleware allows us to serve static files
+app.use("/public/images", express.static("./files"));
 
-app.listen(PORT, () => console.log(`Listening on ${PORT}`));
+app.use("/videos", videoRoute);
+
+app.listen(PORT, () => {
+  console.log("Server is running on port " + PORT);
+});
