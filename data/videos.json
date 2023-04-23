@@ -299,11 +299,5 @@
         "timestamp": 1632496261000
       }
     ]
-  },
-  {
-    "id": "c4eae889-ef57-4110-9d1c-5292954d4993",
-    "title": "Pokemon",
-    "description": "Pokemon",
-    "image": "http://localhost:8080/public/images/fab1d3a7-fe26-4607-b254-dacce084388c_backgroundimg.jpeg"
   }
 ]

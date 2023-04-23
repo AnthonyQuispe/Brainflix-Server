@@ -37,10 +37,29 @@ router.post("/", (req, res) => {
     return;
   }
 
+  const now = new Date();
+  const timestamp = now.toISOString();
+
   const newVideo = {
     id: uuidv4(),
     title,
     description,
+    channel: "Lorem Ipsum",
+    views: "10",
+    likes: "20",
+    duration: "4:20",
+    video: "https://project-2-api.herokuapp.com/stream",
+    timestamp,
+    comments: [
+      {
+        id: uuidv4(),
+        name: "Lorem Ipsum",
+        likes: "20",
+        comment:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        timestamp,
+      },
+    ],
   };
 
   // Handle image upload
