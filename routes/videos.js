@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const fs = require("fs");
 const { v4: uuidv4 } = require("uuid");
+const path = require("path");
 
 function readVideoFile() {
   const videosList = fs.readFileSync("./data/videos.json");
@@ -29,23 +30,43 @@ router.get("/:id", (req, res) => {
 
 // POST endpoint to add a video
 router.post("/", (req, res) => {
-  // Make a new video with a unique id
-  console.log(req.body);
-  const newVideos = {
+  const { title, description } = req.body;
+
+  if (!title || !description) {
+    res.status(400).send("Title and Description are required");
+    return;
+  }
+
+  const newVideo = {
     id: uuidv4(),
-    title: req.body.title,
-    description: req.body.description,
+    title,
+    description,
   };
 
-  // 1. Read the current video array
-  // 2. Add to the video array
-  // 3. Write the entire new video array to the file
+  // Handle image upload
+  if (req.files && req.files.image) {
+    const imageFile = req.files.image;
+    const imagePath = `http://localhost:8080/public/images/${newVideo.id}`;
+    imageFile.mv(
+      path.join(__dirname, `../public/images/${newVideo.id}`),
+      (error) => {
+        if (error) {
+          console.log(error);
+          res.status(500).send("Error writing image file");
+          return;
+        }
+      }
+    );
+    newVideo.image = imagePath;
+  }
+
+  // Add the new video to the video array
   const videos = readVideoFile();
-  videos.push(newVideos);
+  videos.push(newVideo);
   fs.writeFileSync("./data/videos.json", JSON.stringify(videos));
 
-  // Respond with the videos that was created
-  res.status(201).json(newVideos);
+  // Respond with the new video
+  res.status(201).json(newVideo);
 });
 
 module.exports = router;
